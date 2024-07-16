@@ -1,9 +1,9 @@
-﻿using Application.Repositories;
-using Application.Services.Repositories;
+﻿using Application.Services.Repositories;
 using Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq.Expressions;
+using System.Threading;
 
 namespace Persistence.Repositories.Concrete;
 
@@ -54,22 +54,38 @@ public class EfBaseRepository<TEntity, TId, TContext> : IBaseRepository<TEntity,
 
     public TEntity? Get(Expression<Func<TEntity, bool>> predicate)
     {
-        return Context.Set<TEntity>().FirstOrDefault(predicate);
+        IQueryable<TEntity> queryable = Context.Set<TEntity>();
+
+        return queryable.FirstOrDefault(predicate);
     }
 
-    public List<TEntity> GetAll()
+    public List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null)
     {
-        return Context.Set<TEntity>().ToList();
+        IQueryable<TEntity> queryable = Context.Set<TEntity>();
+
+        if (predicate != null)
+            queryable = queryable.Where(predicate);
+
+        return queryable.ToList();
     }
 
-    public async Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+    public async Task<List<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> predicate = null, CancellationToken cancellationToken = default)
     {
-        return await Context.Set<TEntity>().ToListAsync();
+        IQueryable<TEntity> queryable = Context.Set<TEntity>();
+
+        if (predicate != null)
+            queryable = queryable.Where(predicate);
+
+        return await queryable.ToListAsync();
     }
 
     public async Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await Context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+        //return await Context.Set<TEntity>().FirstOrDefaultAsync(predicate);
+
+        IQueryable<TEntity> queryable = Context.Set<TEntity>();
+
+        return await queryable.FirstOrDefaultAsync(predicate, cancellationToken);
     }
 
     public TEntity? GetById(TId id)

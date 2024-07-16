@@ -11,6 +11,12 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class BrandsController : BaseController
 {
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public BrandsController(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -38,9 +44,9 @@ public class BrandsController : BaseController
     [HttpPut]
     public async Task<IActionResult> Update([FromBody] UpdateBrandCommand updateBrandCommand)
     {
-        UpdatedBrandResponse? result = await Mediator.Send(updateBrandCommand);
+        UpdatedBrandResponse? response = await Mediator.Send(updateBrandCommand);
 
-        return Ok(result);
+        return Ok(response);
     }
 
     [HttpDelete("{id}")]
@@ -51,16 +57,24 @@ public class BrandsController : BaseController
             Id = id
         };
 
-        DeletedBrandResponse? result = await Mediator.Send(deleteBrandCommand);
+        DeletedBrandResponse? response = await Mediator.Send(deleteBrandCommand);
 
-        return Ok(result);
+        return Ok(response);
     }
 
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateBrandCommand createBrandCommand)
     {
-        CreatedBrandResponse? result = await Mediator.Send(createBrandCommand);
+        // TODO: Controller seviyesindeki Authentication yapısını dinamik olacak bir biçimde
+        // Application katmanı seviyesine çek.
 
-        return Created("", result);
+        var user = _httpContextAccessor.HttpContext.User;
+
+        if (!user.Identity.IsAuthenticated)
+            throw new Exception("Giriş yapmadan bu endpointi çalıştıramazsınız.");
+
+        CreatedBrandResponse? response = await Mediator.Send(createBrandCommand);
+
+        return Created("", response);
     }
 }

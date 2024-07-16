@@ -12,6 +12,7 @@ public class BorusanDbContext : DbContext
     public DbSet<Transmission> Transmissions { get; set; }
     public DbSet<Fuel> Fuels { get; set; }
     public DbSet<Color> Colors { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

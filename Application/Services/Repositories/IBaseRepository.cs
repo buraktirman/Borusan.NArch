@@ -11,5 +11,5 @@ public partial interface IBaseRepository<TEntity, TId>
     TEntity Update(TEntity entity);
     TEntity? GetById(TId id);
     TEntity? Get(Expression<Func<TEntity, bool>> predicate);
-    List<TEntity> GetAll();
+    List<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate = null);
 }

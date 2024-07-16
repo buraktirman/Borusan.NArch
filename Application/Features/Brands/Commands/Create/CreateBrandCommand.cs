@@ -1,4 +1,5 @@
-﻿using Application.Repositories;
+﻿using Application.Pipeline.Logging;
+using Application.Repositories;
 using AutoMapper;
 using Domain.Entities;
 using MediatR;
@@ -6,7 +7,7 @@ using MediatR;
 namespace Application.Features.Brands.Commands.Create;
 
 // Unit => Fonksiyonda void 
-public class CreateBrandCommand : IRequest<CreatedBrandResponse>
+public class CreateBrandCommand : IRequest<CreatedBrandResponse>, ILoggableRequest
 {
     // Komutun işlevini yerine getirmesi için gereken argümanlar
 

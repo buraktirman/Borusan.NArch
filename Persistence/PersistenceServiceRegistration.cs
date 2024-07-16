@@ -1,4 +1,5 @@
 ﻿using Application.Repositories;
+using Application.Services.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence.Contexts;
 using Persistence.Repositories;
@@ -16,6 +17,7 @@ public static class PersistenceServiceRegistration
         services.AddScoped<ITransmissionRepository, EfTransmissionRepository>();
         services.AddScoped<IColorRepository, EfColorRepository>();
         services.AddScoped<IBrandRepository, EfBrandRepository>();
+        services.AddScoped<IUserRepository, EfUserRepository>();
 
         return services;
     }
