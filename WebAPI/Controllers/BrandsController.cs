@@ -11,13 +11,6 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class BrandsController : BaseController
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
-
-    public BrandsController(IHttpContextAccessor httpContextAccessor)
-    {
-        _httpContextAccessor = httpContextAccessor;
-    }
-
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -65,14 +58,6 @@ public class BrandsController : BaseController
     [HttpPost]
     public async Task<IActionResult> Add([FromBody] CreateBrandCommand createBrandCommand)
     {
-        // TODO: Controller seviyesindeki Authentication yapısını dinamik olacak bir biçimde
-        // Application katmanı seviyesine çek.
-
-        var user = _httpContextAccessor.HttpContext.User;
-
-        if (!user.Identity.IsAuthenticated)
-            throw new Exception("Giriş yapmadan bu endpointi çalıştıramazsınız.");
-
         CreatedBrandResponse? response = await Mediator.Send(createBrandCommand);
 
         return Created("", response);

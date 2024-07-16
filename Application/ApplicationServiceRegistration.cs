@@ -1,4 +1,5 @@
 ﻿using Application.Encryption.JWT;
+using Application.Pipeline.Authentication;
 using Application.Pipeline.Example;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
@@ -13,6 +14,7 @@ public static class ApplicationServiceRegistration
         {
             configuration.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
             configuration.AddOpenBehavior(typeof(ExampleBehavior<,>)); // Herhangi bir TRequest ve TResponse için
+            configuration.AddOpenBehavior(typeof(AuthenticationBehavior<,>));
         });
 
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
